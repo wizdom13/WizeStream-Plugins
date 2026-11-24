@@ -1,66 +1,131 @@
 # WizeStream Plugins
 
-A community-curated list of third-party plugins for [WizeStream](https://github.com/wizdom13/WizeStream)'.
+The plugin catalog for [WizeStream](https://github.com/wizdom13/WizeStream), with
+community-contributed entries for additional streaming services. The catalog is
+published as [`index.json`](index.json); plugin packages are hosted by their authors.
 
-> Plugins run code inside the app and are not reviewed by any app store. Only install plugins from authors you trust. Entries here are listed by the community and are not audited by the WizeStream maintainer.
+> Plugins execute inside WizeStream with the app's permissions. Catalog inclusion
+> is not a security audit. Install packages only from publishers you trust.
 
-## Use it in WizeStream
+## Install a plugin
 
-1. Open **Settings → Plugins** and enable plugins.
-2. Tap **Add WizeStream plugins repository** (shown while this repository is not added yet).
-   Or add the URL manually with **Add repository**:
+Use a WizeStream build that includes **Settings → Plugins**. External plugins
+require **Android 7 / API 24 or newer**; individual packages may require a newer
+Android or host version. The app's built-in services remain available on Android 6.
 
+1. Open **Settings → Plugins** and enable **Allow plugins** after reading the
+   explanation.
+2. In builds containing the WizeStream catalog change, **WizeStream Plugins** is
+   included automatically in **Repositories**. No additional repository is needed.
+   On an earlier plugin-enabled build, use **Add repository** with the raw JSON URL:
+
+   ```text
+   https://raw.githubusercontent.com/wizdom13/WizeStream-Plugins/main/index.json
    ```
-   https://github.com/wizdom13/WizeStream-Plugins/blob/main/index.json
-   ```
-3. Pick a plugin from the **Available** list and install it.
-4. Restart WizeStream to activate it.
 
-## Plugins
+3. Use **Refresh repositories** if needed, select a compatible plugin under
+   **Available**, and confirm its installation.
+4. Restart WizeStream when prompted to load the new service.
+
+Use the raw URL above, not GitHub's `blob/main/index.json` page, which returns HTML.
+A Windows checkout path is useful for editing this catalog but cannot be used as
+an Android repository URL.
+
+Installed plugins can be updated, configured or uninstalled from **Installed**.
+Package changes take effect after restarting the app. WizeStream verifies each
+package's hash and signature and pins its publisher key on first installation;
+updates must retain that key and increase `versionCode`.
+
+Services already bundled with WizeStream do not need plugins. External packages
+cannot replace a built-in provider. For compatibility and profile behavior, see
+the [WizeStream plugin guide](https://github.com/wizdom13/WizeStream/blob/pipe/docs/plugins.md).
+
+## Available services
 
 | Plugin | Description | Author | Source |
-| ------ | ----------- | ------ | ------ |
-| Twitch | Provides access to Twitch, the well-known streaming service | Jonas Mohr | https://github.com/MohrJonas/TwitchPipePipePlugin |
+| --- | --- | --- | --- |
+| Twitch | Access Twitch through an external service plugin. | Jonas Mohr | [TwitchPipePipePlugin](https://github.com/MohrJonas/TwitchPipePipePlugin) |
 
-The official plugins live in a separate, built-in repository and do not need to be added.
+[`index.json`](index.json) is the authoritative list of package versions, download
+URLs and signatures. The app checks package compatibility before installation.
 
-## Submit your plugin
+## Contribute or update a plugin
 
-1. Build and sign your plugin. See the [WizeStream Plugin Template](https://github.com/wizdom13/WizeStream-Plugin-Template) for the package format.
-2. Host the `.ppp` package somewhere stable (for example a GitHub release asset).
-3. Open a pull request that:
-   - adds an entry to `index.json`
-   - adds a row to the table above
-4. Link the plugin's source code in the PR. Closed-source plugins are not accepted.
+1. Implement, build and sign the plugin. For a native WizeStream plugin, start with
+   the [WizeStream Plugin Template](https://github.com/wizdom13/WizeStream-Plugin-Template).
+2. Test the packaged plugin with a compatible WizeStream build, including its
+   minimum supported Android version.
+3. Publish the signed `.ppp` file at a stable HTTPS URL, such as a versioned GitHub
+   release asset. Keep its source code publicly available; closed-source plugins
+   are not accepted.
+4. Open a pull request updating `index.json` and, for a new service, the table above.
+   Include the source repository, release notes and the host/Android versions tested.
 
-### Index entry format
+Copy package identity, versions, compatibility requirements, hash, signature and
+public key from the publisher's generated catalog. Metadata must match the signed
+package's `plugin.json`. Use an absolute HTTPS package URL when copying an entry
+from another catalog; a relative URL would resolve against this repository.
+
+### Supported contracts
+
+| Contract | `host` | `apiVersion` | Starting point |
+| --- | --- | --- | --- |
+| Native WizeStream | `"wizestream"` | `"2.0"` | [WizeStream Plugin Template](https://github.com/wizdom13/WizeStream-Plugin-Template) |
+| PipePipe-compatible | `"pipepipe"`, or omitted | `"1.0"` or `"1.1"` | A package built for the supported PipePipe contract |
+
+Native entries also carry `minHostVersionCode`, `minAndroidSdk` and any
+`requiredCapabilities` from the signed manifest. API compatibility alone does not
+guarantee that every external package works on every supported device. Keep the
+publisher's declared requirements intact and test the actual package.
+
+### Catalog structure
+
+The root object uses `formatVersion: 1`, a catalog `name`, and a `plugins` array.
+This example describes a PipePipe-compatible entry; its cryptographic values are
+placeholders and must be replaced with those generated for the published package.
 
 ```json
 {
-  "pluginId": "org.example.myservice",
-  "name": "MyService",
-  "versionCode": 3,
-  "versionName": "1.2.0",
-  "apiVersion": "1.0",
-  "author": "Jane Doe",
-  "package": "https://example.com/myservice-3.ppp",
-  "sha256": "<hex sha256 of the package>",
-  "signature": "<base64 Ed25519 signature of the raw sha256 digest>",
-  "publicKey": "<base64 raw Ed25519 public key>",
-  "description": "Short description",
-  "nsfw": false
+  "formatVersion": 1,
+  "name": "WizeStream Plugins",
+  "plugins": [
+    {
+      "pluginId": "org.example.myservice",
+      "name": "MyService",
+      "versionCode": 3,
+      "versionName": "1.2.0",
+      "host": "pipepipe",
+      "apiVersion": "1.0",
+      "author": "Jane Doe",
+      "package": "https://example.com/myservice-3.ppp",
+      "sha256": "<64 hexadecimal characters>",
+      "signature": "<Base64 Ed25519 signature over the raw SHA-256 digest>",
+      "publicKey": "<Base64 raw 32-byte Ed25519 public key>",
+      "description": "Short description",
+      "nsfw": false
+    }
+  ]
 }
 ```
 
-`description` and `nsfw` are optional. WizeStream pins the public key on first install and refuses updates signed with another key.
+`description` and `nsfw` are optional. `sha256` covers the exact published archive;
+the signature is over the raw **32 digest bytes**, not their hexadecimal text.
+The public key in the catalog is the raw key, not a PEM or X.509 document. The
+native template generates these values in the host's required format.
 
-### Rules
+### Contribution rules
 
-- The plugin must do what its description says and must not collect data without disclosure.
-- No malware, ads injection or tracking.
-- Keep `versionCode` increasing with every release.
-- Entries may be removed if the plugin is abandoned, broken or found to be harmful.
+- Keep `pluginId` stable and increase `versionCode` for each update.
+- Retain the publisher's signing key; a different key is rejected for an already
+  trusted plugin identity, including after uninstalling it.
+- The plugin must perform its advertised function and disclose any data collection.
+- No malware, ad injection or tracking.
+- Entries may be removed if a plugin is abandoned, broken or harmful.
+
+Report service-specific problems to the plugin author. Report a broken catalog
+entry through this repository's [issues](https://github.com/wizdom13/WizeStream-Plugins/issues).
 
 ## License
 
-The list and index are released under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Each plugin keeps its own license.
+See [LICENSE](LICENSE) for the GNU GPLv3 license included with this repository.
+Each plugin retains its own license and attribution.
