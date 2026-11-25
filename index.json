@@ -15,6 +15,24 @@
       "publicKey": "BHXTB1DqhMt9/MVbz63M5/YPOkEtuDPh72ueB4DqUsc=",
       "description": "Provides access to Twitch, the well-known streaming service",
       "nsfw": false
+    },
+    {
+      "pluginId": "org.wizestream.plugin.dailymotion",
+      "name": "Dailymotion",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "host": "wizestream",
+      "apiVersion": "2.0",
+      "author": "WizeStream contributors",
+      "description": "Public Dailymotion videos, live streams, search, channels and playlists for WizeStream.",
+      "minHostVersionCode": 1052000,
+      "minAndroidSdk": 24,
+      "requiredCapabilities": [],
+      "package": "https://github.com/wizdom13/Dailymotion-WizeStream-Plugin/releases/download/repo/dailymotion-wizestream-plugin-1.ppp",
+      "sha256": "100400354ebfa9f9c99ed5775f8202fe2c4b3360652d87fdd8a4e83be3dc9373",
+      "signature": "uNbRQRIBXmWJrOklaRuJj1Qcci3Vu3dRUaE/KPUcn2yRnlxWreBV3O0MYPMdbY1/NKpDYZOXeU7P4planIhfCw==",
+      "publicKey": "rAD5S40Ep8ib4+AMVxwlR+uxjRzP8FqncRZOt1oftDc=",
+      "nsfw": false
     }
   ]
 }
