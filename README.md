@@ -45,9 +45,12 @@ the [WizeStream plugin guide](https://github.com/wizdom13/WizeStream/blob/pipe/d
 | Plugin | Description | Author | Source |
 | --- | --- | --- | --- |
 | Twitch | Access Twitch through an external service plugin. | Jonas Mohr | [TwitchPipePipePlugin](https://github.com/MohrJonas/TwitchPipePipePlugin) |
+| Dailymotion | Public videos, live streams, search, channels and playlists through native WizeStream API 2.0. | WizeStream contributors | [Dailymotion-WizeStream-Plugin](https://github.com/wizdom13/Dailymotion-WizeStream-Plugin) |
 
 [`index.json`](index.json) is the authoritative list of package versions, download
 URLs and signatures. The app checks package compatibility before installation.
+
+Dailymotion requires **WizeStream 1.52.0 or newer** and **Android 7 / API 24 or newer**.
 
 ## Contribute or update a plugin
 
